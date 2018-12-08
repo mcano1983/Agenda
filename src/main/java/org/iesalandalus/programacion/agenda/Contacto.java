@@ -1,11 +1,12 @@
 package org.iesalandalus.programacion.agenda;
 
+import java.util.StringTokenizer;
 import java.util.regex.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Objects;
 
-//Inicializacion de variables privativas//
+//Inicializacion de variables privativas
 public class Contacto {
 	private static final String ER_TELEFONO = "^[6 9][0-9]{8}$";
 	private static final String ER_CORREO = "^\\w+.+[@]{1}[a-z]+[.][a-z]{2,5}$";
@@ -50,7 +51,7 @@ public class Contacto {
 
 	public void setCorreo(String correo) {
 
-		if (correo == null|| correo.isEmpty()==true) {
+		if (correo == null || correo.isEmpty() == true) {
 			throw new IllegalArgumentException("El correo de un contacto no puede ser nulo o vacío.");
 		}
 		Pattern pat = Pattern.compile(ER_CORREO);
@@ -68,6 +69,17 @@ public class Contacto {
 		setCorreo(correo);
 	}
 
+	private String getIniciales() {
+		StringTokenizer cadena = new StringTokenizer(nombre);
+		String iniciales = "";
+		while (cadena.hasMoreTokens()) {
+			String nombreCompletoToken = cadena.nextToken();
+			iniciales += nombreCompletoToken.charAt(0);
+		}
+		iniciales = iniciales.toUpperCase();
+		return iniciales;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -80,29 +92,31 @@ public class Contacto {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Contacto other = (Contacto) obj;
-		if (correo == null) {
-			if (other.correo != null)
-				return false;
-		} else if (!correo.equals(other.correo))
+		}
+		final Contacto other = (Contacto) obj;
+		if (Objects.equals(this.nombre.toLowerCase(), other.nombre.toLowerCase())) {
+			return true;
+		}
+		if (!Objects.equals(this.telefono, other.telefono)) {
 			return false;
-		if (nombre == null) {
-			if (other.nombre != null)
-				return false;
-		} else if (!nombre.equals(other.nombre))
+		}
+		if (!Objects.equals(this.correo, other.correo)) {
 			return false;
-		if (telefono == null) {
-			if (other.telefono != null)
-				return false;
-		} else if (!telefono.equals(other.telefono))
-			return false;
+		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return getIniciales() + " [" + telefono + ", " + correo + "]";
 	}
 
 }
